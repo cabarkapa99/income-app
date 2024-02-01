@@ -13,7 +13,8 @@
     <div id="main-container">
         <div id="tabs-container">
             <button id="btn-unos" title="Unesite prihode">Unos prihoda</button>
-            <button id="btn-prikaz" title="Prikazi statistiku">Prikaz podataka</button>
+            <button id="btn-prikaz" title="Prikazi statistiku">Prikaz statistike</button>
+            <button id="btn-podaci" title="Prikazi unose">Prikaz podataka</button>
         </div>
         <div id="input-container" class="">
             <div class="wrapper">
@@ -61,6 +62,25 @@
                 </div>
             </div>
             <div id="graphics-wrapper"></div>
+        </div>
+        <div id="data-container" class="hide">
+            <div id="data-wrapper">
+                <div id="data-header">
+                    <h2>Podaci</h2>
+                </div>
+                <div id="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Datum</th>
+                                <th>Prihod</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
     <div id="checkout" class="hide">

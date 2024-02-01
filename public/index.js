@@ -3,10 +3,10 @@ const getCurrentDayMonthYear = function(){
     const months = ["Jan", "Feb", "Mar", "Apr", "Maj", "Jun", "Jul", "Avg", "Sep", "Okt", "Nov", "Dec"];
 
     const date = new Date();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    const day = date.getDate();
-    const numberOfDays = new Date(year, month, 0).getDate();
+    let month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    let day = date.getDate();
+    let numberOfDays = new Date(year, month, 0).getDate();
     const monthName = months[month - 1]; 
 
     const godinaInput = document.getElementById('godina');
@@ -24,6 +24,35 @@ const getCurrentDayMonthYear = function(){
     }
 
     danInput.selectedIndex = day-1;
+
+        // Add event listeners to the month and year inputs
+        godinaInput.addEventListener('change', function() {
+            year = parseInt(this.value);
+            numberOfDays = new Date(year, month, 0).getDate();
+            updateDayOptions();
+        });
+    
+        mesecInput.addEventListener('change', function() {
+            month = this.selectedIndex + 1;
+            numberOfDays = new Date(year, month, 0).getDate();
+            updateDayOptions();
+        });
+    
+        // Function to update the day options
+        function updateDayOptions() {
+            // Clear the existing options
+            while (danInput.firstChild) {
+                danInput.removeChild(danInput.firstChild);
+            }
+    
+            // Add the new options
+            for(let i=1; i<=numberOfDays; i++){
+                let option = document.createElement('option');
+                let optionText = document.createTextNode(`${i}`);
+                option.appendChild(optionText);
+                danInput.appendChild(option);
+            }
+        }
 }
 
 getCurrentDayMonthYear();
@@ -101,13 +130,16 @@ function prihodZaTekucuKalendarskuGodinu(prihodi){
     // Draw the chart and set the chart values
     function drawChart() {
     var data = google.visualization.arrayToDataTable([
-    ['Budget', 'Amount'],
-    ['primljeno', ukupniPrihod],
-    ['moze jos da se primi', 6000-ukupniPrihod],
+    ['Budget', 'Amount', { role: 'style' }],
+    ['primljeno', ukupniPrihod, 'color: #FF6961'],
+    ['moze jos da se primi', 6000-ukupniPrihod, 'color: #77DD77'],
     ]);
 
     // Optional; add a title and set the width and height of the chart
-    var options = {'title':'* izrazeno u hiljadama'};
+    var options = {
+                    'title':'* izrazeno u hiljadama',
+                    'colors': ['#FF6961', '#77DD77']
+                  };
 
     // Display the chart inside the <div> element with id="piechart"
     var chart = new google.visualization.PieChart(document.getElementById('6mil-chart'));
@@ -144,7 +176,10 @@ function prihodiZaPoslednjihGodinuDana(prihodi){
         ]);
     
         // Optional; add a title and set the width and height of the chart
-        var options = {'title':'* izrazeno u hiljadama'};
+        var options = {
+            'title':'* izrazeno u hiljadama',
+            'colors': ['#FF6961', '#77DD77']
+        };
     
         // Display the chart inside the <div> element with id="piechart"
         var chart = new google.visualization.PieChart(document.getElementById('8mil-chart'));
@@ -177,35 +212,53 @@ function uporediDvaDatuma(a, b){
         return true;
     }
 }
+function prikaziPrihode(prihodi){
+    const bodyTable = document.getElementById('data-body');
+    for(const prihod of prihodi){
+        let tr = document.createElement('tr');
+        let td1 = document.createElement('td');
+        let td1Text = document.createTextNode(prihod.datum);
+        td1.appendChild(td1Text);
+        tr.appendChild(td1);
+        let td2 = document.createElement('td');
+        let prihodNum = Number.parseFloat(prihod.prihod) * 1000;
+        let td2Text = document.createTextNode(prihodNum);
+        td2.appendChild(td2Text);
+        tr.appendChild(td2);
+        bodyTable.appendChild(tr);
+    }
+}
 const prikaziPodatke = async function(){
     let prihodi = await dohvatiPodatke();
     console.log(prihodi)
     prihodZaTekucuKalendarskuGodinu(prihodi);
     prihodiZaPoslednjihGodinuDana(prihodi);
+    prikaziPrihode(prihodi);
 }
 prikaziPodatke();
 
 function prikazKartica(){
     const unosBtn = document.getElementById('btn-unos');
     const prikazBtn = document.getElementById('btn-prikaz');
+    const prihodBtn = document.getElementById('btn-podaci');
     const inputContainer = document.getElementById('input-container');
     const displayContainer = document.getElementById('display-container');
+    const prihodContainer = document.getElementById('data-container');
 
     unosBtn.addEventListener('click', ()=>{
-        if(!displayContainer.classList.contains('hide')){
-            displayContainer.classList.add('hide');
-        }
-        if(inputContainer.classList.contains('hide')){
-            inputContainer.classList.remove('hide');
-        }
+        displayContainer.classList.add('hide');
+        prihodContainer.classList.add('hide');
+        inputContainer.classList.remove('hide');
     })
     prikazBtn.addEventListener('click', ()=>{
-        if(!inputContainer.classList.contains('hide')){
-            inputContainer.classList.add('hide');
-        }
-        if(displayContainer.classList.contains('hide')){
-            displayContainer.classList.remove('hide');
-        }
+        inputContainer.classList.add('hide');
+        prihodContainer.classList.add('hide');
+        displayContainer.classList.remove('hide');
+    })
+    prihodBtn.addEventListener('click', ()=>{
+        inputContainer.classList.add('hide');
+        displayContainer.classList.add('hide');
+        prihodContainer.classList.remove('hide');
     })
 }
 prikazKartica();

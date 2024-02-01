@@ -26,6 +26,7 @@ const dodajPrihod = async function(data){
 
     return await noviPrihod.save();
 }
+
 const dohvatiPrihode = async function(){
     const prihodi = await PrihodiModel.find({},{_id:0}).exec();
     if(prihodi.length === 0){

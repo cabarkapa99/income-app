@@ -3,7 +3,9 @@ const path = require('path');
 
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/incomeApp', 
+//ibWK0BtWw8u0Ei1w
+//mongodb+srv://dimitrijecabarkapa99:<password>@incomeapp.ccvv3qi.mongodb.net/?retryWrites=true&w=majority
+mongoose.connect('mongodb+srv://dimitrijecabarkapa99:ibWK0BtWw8u0Ei1w@incomeapp.ccvv3qi.mongodb.net/incomeApp?retryWrites=true&w=majority', 
 {
     useNewUrlParser: true,
     useUnifiedTopology: true
